@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLASSIFIED // MUNJIRU</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#030308;color:#fff;font-family:"Courier New",monospace;overflow-x:hidden}
+#stars{position:fixed;inset:0;z-index:-3;background:radial-gradient(circle at 20% 20%,#21134a 0%,transparent 25%),radial-gradient(circle at 80% 70%,#35102e 0%,transparent 25%),#030308}
+.star{position:fixed;width:2px;height:2px;background:white;border-radius:50%;opacity:.7;animation:twinkle 3s infinite alternate}
+@keyframes twinkle{from{opacity:.15}to{opacity:1}}
+.glitch{animation:glitch 3s infinite}
+@keyframes glitch{0%,90%,100%{transform:translate(0)}92%{transform:translate(-2px,1px)}94%{transform:translate(2px,-1px)}96%{transform:translate(-1px,2px)}}
+.hero{min-height:100vh;display:flex;justify-content:center;align-items:center;text-align:center;padding:25px}
+.panel,.vault-box,.letter{width:min(700px,95%);padding:45px 25px;border:1px solid rgba(255,255,255,.15);border-radius:25px;background:rgba(255,255,255,.04);backdrop-filter:blur(15px);box-shadow:0 0 60px rgba(160,80,255,.15)}
+.classified{color:#ff365e;letter-spacing:5px;font-size:12px;margin-bottom:25px}
+h1{font-size:clamp(35px,9vw,75px);margin-bottom:15px}
+.subtitle{color:#aaa;line-height:1.7}
+button{margin-top:30px;padding:15px 25px;border-radius:50px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:white;cursor:pointer;font-family:inherit;transition:.3s}
+button:hover{transform:scale(1.06);background:rgba(255,255,255,.15);box-shadow:0 0 25px rgba(255,255,255,.15)}
+#terminal{display:none;margin-top:30px;text-align:left;color:#67ff9a;min-height:150px;line-height:1.8;font-size:13px}
+#vault,#message,#memories,#final{display:none;min-height:100vh;padding:80px 20px;text-align:center}
+#vault{display:none}
+.lock{font-size:70px;margin-bottom:20px}
+input{margin-top:25px;padding:15px;width:180px;text-align:center;font-size:25px;letter-spacing:10px;color:white;background:#000;border:1px solid #ffffff44;border-radius:10px;outline:none}
+.letter{margin:auto;line-height:2}
+.letter h2{font-size:clamp(30px,7vw,55px);margin-bottom:25px}
+.section-title{text-align:center;margin-bottom:50px}
+.gallery{max-width:1000px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.memory{height:360px;border-radius:20px;overflow:hidden;position:relative;background:linear-gradient(135deg,#161625,#31162d);border:1px solid #ffffff18;transition:.4s}
+.memory:hover{transform:translateY(-10px) rotate(1deg);box-shadow:0 20px 50px #000}
+.memory img{width:100%;height:100%;object-fit:cover}
+.memory-caption{position:absolute;bottom:0;left:0;right:0;padding:18px;background:linear-gradient(transparent,rgba(0,0,0,.9));text-align:left;color:#ddd}
+.birthday{font-size:clamp(45px,10vw,90px);background:linear-gradient(90deg,#ff3b7a,#b56cff,#53c8ff);-webkit-background-clip:text;color:transparent;animation:glow 2s infinite alternate}
+@keyframes glow{from{filter:drop-shadow(0 0 5px #ff3b7a)}to{filter:drop-shadow(0 0 25px #b56cff)}}
+.clue{position:fixed;bottom:15px;right:15px;font-size:10px;color:#ffffff22;cursor:pointer}
+.clue:hover{color:white}
+#secret{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:100;justify-content:center;align-items:center;padding:25px}
+.secret-box{max-width:600px;text-align:center;border:1px solid #ff365e55;padding:40px;border-radius:25px;background:#08080f}
+#countdown{font-size:35px;margin-top:20px;color:#ff426d}
+@media(max-width:600px){.panel,.letter{padding:35px 18px}.memory{height:430px}}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<section class="hero">
+  <div class="panel">
+    <div class="classified">// CLASSIFIED TRANSMISSION //</div>
+    <h1 class="glitch">Hey Munjiru... 👀</h1>
+    <p class="subtitle">Someone left something behind for you.<br><br>But it wasn't meant to be opened easily.</p>
+    <button onclick="initialize()">INITIALIZE DECRYPTION</button>
+    <div id="terminal"></div>
+  </div>
+</section>
+
+<section id="vault">
+  <div class="vault-box">
+    <div class="lock">🔐</div>
+    <h2>SECURE VAULT</h2>
+    <p style="margin-top:15px;color:#aaa">An access key is required.</p>
+    <p style="margin-top:20px;color:#ff5374">Hint:</p>
+    <p style="color:#aaa">"The answer is hidden in a year."</p>
+    <input id="code" type="password" maxlength="4" placeholder="••••">
+    <br>
+    <button onclick="unlock()">UNLOCK</button>
+    <p id="wrong" style="color:#ff365e;margin-top:20px"></p>
+  </div>
+</section>
+
+<section id="message">
+  <div class="letter">
+    <div style="font-size:50px">💌</div>
+    <h2>Decryption Complete</h2>
+    <p>Munjiru...</p><br>
+    <p>If you are reading this, you made it through the first layer.</p>
+    <p>But here's the thing...</p><br>
+    <p>The real message was never hidden in the code.</p>
+    <p>It was hidden in the memories.</p>
+    <button onclick="showMemories()">ACCESS MEMORIES ⏩</button>
+  </div>
+</section>
+
+<section id="memories">
+  <div class="section-title">
+    <h2>THROUGH THE LENS 📸</h2>
+    <p style="color:#888;margin-top:15px">Evidence recovered from the archive.</p>
+  </div>
+
+  <div class="gallery">
+    <div class="memory">
+      <img src="406218.jpg" alt="Munjiru memory">
+      <div class="memory-caption">
+        <strong>ARCHIVE 01</strong><br>
+        Some memories don't need an explanation.
+      </div>
+    </div>
+  </div>
+
+  <button onclick="finalReveal()">THERE'S SOMETHING ELSE... 👀</button>
+</section>
+
+<section id="final">
+  <p style="letter-spacing:5px;color:#888">FINAL TRANSMISSION</p>
+  <h1 class="birthday">HAPPY BIRTHDAY<br>MUNJIRU 🎉</h1>
+  <p style="max-width:600px;margin:30px auto;line-height:2;color:#aaa">
+    Another year has been added to your story.<br><br>
+    May this chapter bring you beautiful surprises,
+    unforgettable memories, genuine happiness,
+    and everything you've been quietly wishing for.<br><br>
+    And remember...<br><br>
+    <strong style="color:white">Some mysteries are better left unexplained.</strong>
+  </p>
+  <button onclick="celebrate()">BURST THE VAULT 🎂</button>
+</section>
+
+<div class="clue" onclick="openSecret()">07-19-XX</div>
+
+<div id="secret">
+  <div class="secret-box">
+    <div style="font-size:55px">🕵️</div>
+    <h2>YOU FOUND SOMETHING</h2>
+    <p style="margin-top:20px;color:#aaa;line-height:1.8">
+      Most people never notice this.<br><br>
+      But if you're curious enough...<br>
+      maybe you're ready for another secret.
+    </p>
+    <div id="countdown">03</div>
+    <button onclick="closeSecret()">RETURN</button>
+  </div>
+</div>
+
+<script>
+for(let i=0;i<160;i++){
+  const star=document.createElement("div");
+  star.className="star";
+  star.style.left=Math.random()*100+"%";
+  star.style.top=Math.random()*100+"%";
+  star.style.animationDelay=Math.random()*3+"s";
+  document.getElementById("stars").appendChild(star);
+}
+
+function initialize(){
+  const terminal=document.getElementById("terminal");
+  terminal.style.display="block";
+  const messages=[
+    "> establishing secure connection...",
+    "> connection established.",
+    "> scanning recipient...",
+    "> TARGET: MUNJIRU",
+    "> identity confirmed.",
+    "> birthday package detected.",
+    "> encryption level: EXTREME",
+    "> searching for access key...",
+    "> WARNING: unauthorized access detected.",
+    "> just kidding 😏",
+    "> opening vault..."
+  ];
+  let i=0;
+  function typeLine(){
+    if(i<messages.length){
+      terminal.innerHTML+=messages[i]+"<br>";
+      i++;
+      setTimeout(typeLine,500);
+    }else{
+      setTimeout(()=>{
+        document.getElementById("vault").style.display="block";
+        document.getElementById("vault").scrollIntoView({behavior:"smooth"});
+      },800);
+    }
+  }
+  typeLine();
+}
+
+/* NEW SECRET CODE */
+const SECRET_CODE="2007";
+
+function unlock(){
+  const code=document.getElementById("code").value;
+  const wrong=document.getElementById("wrong");
+  if(code===SECRET_CODE){
+    wrong.innerHTML="ACCESS GRANTED ✓";
+    wrong.style.color="#67ff9a";
+    setTimeout(()=>{
+      document.getElementById("message").style.display="block";
+      document.getElementById("message").scrollIntoView({behavior:"smooth"});
+    },700);
+  }else{
+    wrong.innerHTML="ACCESS DENIED... Try again 👀";
+    document.getElementById("code").value="";
+  }
+}
+
+function showMemories(){
+  document.getElementById("memories").style.display="block";
+  document.getElementById("memories").scrollIntoView({behavior:"smooth"});
+}
+
+function finalReveal(){
+  document.getElementById("final").style.display="block";
+  document.getElementById("final").scrollIntoView({behavior:"smooth"});
+}
+
+function openSecret(){
+  document.getElementById("secret").style.display="flex";
+  let number=3;
+  const countdown=document.getElementById("countdown");
+  const timer=setInterval(()=>{
+    number--;
+    countdown.innerText=number;
+    if(number<=0){
+      clearInterval(timer);
+      countdown.innerHTML="👀 YOU FOUND THE HIDDEN LAYER";
+    }
+  },1000);
+}
+
+function closeSecret(){
+  document.getElementById("secret").style.display="none";
+}
+
+function celebrate(){
+  for(let i=0;i<120;i++){
+    const piece=document.createElement("div");
+    piece.innerHTML=["🎉","✨","💜","🎂","❤️","⭐"][Math.floor(Math.random()*6)];
+    piece.style.position="fixed";
+    piece.style.left=Math.random()*100+"vw";
+    piece.style.top="-20px";
+    piece.style.fontSize=(15+Math.random()*25)+"px";
+    piece.style.zIndex="999";
+    const duration=2+Math.random()*3;
+    document.body.appendChild(piece);
+    piece.animate(
+      [{transform:"translateY(0) rotate(0deg)",opacity:1},
+       {transform:`translateY(110vh) rotate(${Math.random()*720}deg)`,opacity:0}],
+      {duration:duration*1000,easing:"ease-out"}
+    );
+    setTimeout(()=>piece.remove(),duration*1000);
+  }
+}
+
+let secretSequence="";
+document.addEventListener("keydown",e=>{
+  secretSequence+=e.key.toLowerCase();
+  if(secretSequence.includes("munjiru")){
+    alert("👀 You found the developer's secret.");
+    secretSequence="";
+  }
+  if(secretSequence.length>20) secretSequence=secretSequence.slice(-10);
+});
+</script>
+</body>
+</html>
